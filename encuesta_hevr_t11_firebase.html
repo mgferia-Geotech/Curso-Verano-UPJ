@@ -4,23 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Encuesta H–E–V–R | T1.1</title>
-
-<!-- ═══════════════════════════════════════════════════════════════
-  INSTRUCCIONES DE CONFIGURACIÓN (leer antes de publicar)
-  ═══════════════════════════════════════════════════════════════
-  1. Ve a https://console.firebase.google.com
-  2. Crea un proyecto → agrega una app Web
-  3. Copia los valores del objeto firebaseConfig que te da Firebase
-  4. Reemplaza los valores en el objeto FIREBASE_CONFIG más abajo
-  5. En Firebase Console → Realtime Database → Reglas, pega esto:
-     {
-       "rules": {
-         "respuestas": { ".read": true, ".write": true }
-       }
-     }
-  6. Sube este archivo a GitHub y listo.
-  ════════════════════════════════════════════════════════════════ -->
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7f8fa;min-height:100vh}
@@ -45,8 +28,8 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
 .tag{display:inline-block;font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;background:#E6F1FB;color:#185FA5;margin-bottom:.5rem}
 .stat-row{margin-bottom:1rem}
 .stat-label{font-size:13px;color:#4a5568;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
-.bar-bg{background:#f7f8fa;border-radius:3px;height:24px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;transition:width .5s ease;display:flex;align-items:center;padding-left:8px;min-width:0}
+.bar-bg{background:#edf2f7;border-radius:3px;height:26px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;min-width:0}
 .bar-fill span{font-size:12px;font-weight:500;color:#fff;white-space:nowrap}
 .tabs{display:flex;gap:8px;margin-bottom:1rem;border-bottom:0.5px solid #e2e8f0;padding-bottom:.5rem}
 .tab{font-size:13px;font-weight:500;padding:.35rem .75rem;border-radius:20px;cursor:pointer;color:#4a5568;border:none;background:none}
@@ -69,6 +52,7 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
 .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75;margin-right:5px;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .reset-confirm{background:#FCEBEB;border-radius:8px;padding:.75rem 1rem;margin-top:.75rem;font-size:13px;color:#A32D2D;display:none}
+.count-badge{font-size:11px;background:#e2e8f0;color:#4a5568;padding:2px 7px;border-radius:10px;margin-left:6px;font-weight:400}
 </style>
 </head>
 <body>
@@ -82,9 +66,8 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
     <p style="font-size:14px;color:#4a5568;margin-bottom:1.25rem">Escanea el código o accede directamente</p>
     <div class="qr-wrap">
       <div class="qr-box">
-       <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://qrco.de/bgjqI5" width="180" height="180" alt="QR encuesta" style="display:block">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://qrco.de/bgjqI5" width="180" height="180" alt="QR encuesta" style="display:block">
       </div>
-      <p style="font-size:13px;color:#4a5568;text-align:center">Reemplaza el QR con tu imagen real<br>una vez publicado en GitHub</p>
     </div>
     <div id="fb-status" class="status-bar status-wait">Conectando con la base de datos...</div>
     <button class="btn-primary" onclick="go('screen-q1')">Iniciar encuesta →</button>
@@ -176,9 +159,7 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
       <span style="font-size:12px;color:#4a5568" id="resp-count">0 respuestas</span>
     </div>
     <p style="font-size:17px;font-weight:500;margin-bottom:.75rem">Resultados en tiempo real</p>
-
-    <div id="live-indicator" class="status-bar status-wait" style="margin-bottom:1rem">Conectando...</div>
-
+    <div id="live-indicator" class="status-bar status-wait">Conectando...</div>
     <div class="summary-grid">
       <div class="metric">
         <div class="val" id="m-total">0</div>
@@ -189,18 +170,14 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
         <div class="lbl">% respuesta clave Q1</div>
       </div>
     </div>
-
     <div class="tabs">
       <button class="tab active" onclick="showTab(0)">Q1</button>
       <button class="tab" onclick="showTab(1)">Q2</button>
       <button class="tab" onclick="showTab(2)">Q3</button>
     </div>
-
-    <div id="chart-area" style="min-height:120px"></div>
-
+    <div id="chart-area" style="min-height:160px"></div>
     <div class="divider"></div>
-
-    <button class="btn-secondary" id="btn-reset" onclick="showResetConfirm()">Reiniciar encuesta</button>
+    <button class="btn-secondary" onclick="showResetConfirm()">Reiniciar encuesta</button>
     <div class="reset-confirm" id="reset-confirm">
       ¿Seguro? Se borrarán todas las respuestas.<br>
       <div style="display:flex;gap:8px;margin-top:.5rem">
@@ -211,18 +188,12 @@ body{font-family:system-ui,-apple-system,sans-serif;color:#1a1a2e;background:#f7
   </div>
 </div>
 
-</div><!-- /max-width wrapper -->
+</div>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   PASO 1 — REEMPLAZA ESTOS VALORES CON LOS DE TU PROYECTO
-   Ve a Firebase Console → tu proyecto → Configuración (⚙️)
-   → Tus apps → SDK de Firebase → Configuración
-   ═══════════════════════════════════════════════════════════ */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDtvddkeiz3FdJNZOqtyTZFLr9VvDHnu_Y",
   authDomain: "curso-verano-upj.firebaseapp.com",
@@ -232,7 +203,6 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "1088880602188",
   appId: "1:1088880602188:web:2f4d7d1732ce2e83d158e9"
 };
-/* ═══════════════════════════════════════════════════════════ */
 
 const QUESTIONS = [
   {
@@ -256,49 +226,55 @@ const QUESTIONS = [
 ];
 
 let db = null;
-let answers = {q1:null, q2:null, q3:null};
+let answers = { q1: null, q2: null, q3: null };
 let allResponses = [];
 let currentTab = 0;
-let fbOk = false;
 
-/* ── Inicializar Firebase ─────────────────────────────────── */
+/* ── Firebase init ─────────────────────────────────────────── */
 function initFirebase() {
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
+
     db.ref('.info/connected').on('value', snap => {
-      fbOk = snap.val() === true;
-      const el = document.getElementById('fb-status');
-      const li = document.getElementById('live-indicator');
-      if (fbOk) {
-        if (el) { el.className='status-bar status-ok'; el.innerHTML='<span class="live-dot"></span>Conectado — respuestas en tiempo real'; }
-        if (li) { li.className='status-bar status-ok'; li.innerHTML='<span class="live-dot"></span>Escuchando respuestas en tiempo real'; }
+      const ok = snap.val() === true;
+      const fbEl = document.getElementById('fb-status');
+      const liEl = document.getElementById('live-indicator');
+      if (ok) {
+        if (fbEl) { fbEl.className = 'status-bar status-ok'; fbEl.innerHTML = '<span class="live-dot"></span>Conectado — respuestas en tiempo real'; }
+        if (liEl) { liEl.className = 'status-bar status-ok'; liEl.innerHTML = '<span class="live-dot"></span>Escuchando respuestas en tiempo real'; }
       } else {
-        if (el) { el.className='status-bar status-err'; el.textContent='Sin conexión — verifica tu configuración de Firebase'; }
-        if (li) { li.className='status-bar status-err'; li.textContent='Sin conexión'; }
+        if (fbEl) { fbEl.className = 'status-bar status-err'; fbEl.textContent = 'Sin conexión — verifica Firebase'; }
+        if (liEl) { liEl.className = 'status-bar status-err'; liEl.textContent = 'Sin conexión'; }
       }
     });
-    /* Escuchar respuestas en tiempo real */
-    db.ref('respuestas').on('value', snap => {
+
+    /* ── ESCUCHA EN TIEMPO REAL — acumula TODAS las respuestas ── */
+    db.ref('respuestas').on('value', snapshot => {
       allResponses = [];
-      snap.forEach(child => allResponses.push(child.val()));
+      snapshot.forEach(child => {
+        const val = child.val();
+        /* solo registros válidos con al menos q1 */
+        if (val && val.q1) allResponses.push(val);
+      });
       updateMetrics();
       renderChart();
     });
-  } catch(e) {
+
+  } catch (e) {
     console.error('Firebase error:', e);
-    const el = document.getElementById('fb-status');
-    if (el) { el.className='status-bar status-err'; el.textContent='Error de configuración — revisa los valores de Firebase'; }
+    const fbEl = document.getElementById('fb-status');
+    if (fbEl) { fbEl.className = 'status-bar status-err'; fbEl.textContent = 'Error de configuración de Firebase'; }
   }
 }
 
-/* ── Navegación ───────────────────────────────────────────── */
+/* ── Navegación ────────────────────────────────────────────── */
 function go(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* ── Selección de opción ──────────────────────────────────── */
+/* ── Selección de opción ───────────────────────────────────── */
 function sel(btn, q, val) {
   btn.closest('.card').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -307,90 +283,107 @@ function sel(btn, q, val) {
   if (nxt) nxt.disabled = false;
 }
 
-/* ── Enviar respuestas a Firebase ────────────────────────── */
+/* ── Enviar a Firebase ─────────────────────────────────────── */
 function submitAnswers() {
-  if (!db) { alert('Sin conexión a Firebase. Verifica la configuración.'); return; }
-  const entry = {
+  if (!db) { alert('Sin conexión a Firebase.'); return; }
+  db.ref('respuestas').push({
     q1: answers.q1,
     q2: answers.q2,
     q3: answers.q3,
     ts: Date.now()
-  };
-  db.ref('respuestas').push(entry)
-    .then(() => go('screen-done'))
-    .catch(err => alert('Error al guardar: ' + err.message));
+  })
+  .then(() => go('screen-done'))
+  .catch(err => alert('Error al guardar: ' + err.message));
 }
 
-/* ── Métricas resumen ─────────────────────────────────────── */
+/* ── Métricas cabecera ─────────────────────────────────────── */
 function updateMetrics() {
   const n = allResponses.length;
-  const el = document.getElementById('m-total');
-  const rc = document.getElementById('resp-count');
-  const mc = document.getElementById('m-correct');
-  if (el) el.textContent = n;
-  if (rc) rc.textContent = n + ' respuesta' + (n === 1 ? '' : 's');
-  if (mc) {
-    const vCount = allResponses.filter(r => r.q1 === 'V — Vulnerability').length;
-    mc.textContent = n > 0 ? Math.round(vCount / n * 100) + '%' : '—';
+  const elTotal   = document.getElementById('m-total');
+  const elCount   = document.getElementById('resp-count');
+  const elCorrect = document.getElementById('m-correct');
+  if (elTotal)   elTotal.textContent   = n;
+  if (elCount)   elCount.textContent   = n + ' respuesta' + (n === 1 ? '' : 's');
+  if (elCorrect) {
+    if (n === 0) {
+      elCorrect.textContent = '—';
+    } else {
+      const vCount = allResponses.filter(r => r.q1 === 'V — Vulnerability').length;
+      elCorrect.textContent = Math.round(vCount / n * 100) + '%';
+    }
   }
 }
 
-/* ── Gráficas de barras horizontales ─────────────────────── */
+/* ── Gráficas de barras — FIX PRINCIPAL ───────────────────── */
 function renderChart() {
   const area = document.getElementById('chart-area');
   if (!area) return;
-  const q = QUESTIONS[currentTab];
+
+  const n = allResponses.length; /* total REAL de respuestas */
+  const q   = QUESTIONS[currentTab];
   const key = 'q' + (currentTab + 1);
-  const counts = q.opts.map(o => allResponses.filter(r => r[key] === o).length);
-  const total = allResponses.length || 1;
-  const maxCount = Math.max(...counts, 1);
+
+  /* Contar cuántos eligieron cada opción */
+  const counts = q.opts.map(opt =>
+    allResponses.filter(r => r[key] === opt).length
+  );
 
   let html = `<div class="q-label" style="margin-bottom:.75rem">${q.label}</div>`;
+
+  if (n === 0) {
+    html += `<p style="font-size:13px;color:#4a5568;text-align:center;padding:1.5rem 0">Esperando respuestas de los estudiantes...</p>`;
+    area.innerHTML = html;
+    return;
+  }
+
   q.opts.forEach((opt, i) => {
-    const pct    = Math.round(counts[i] / total * 100);
-    const barW   = Math.round(counts[i] / maxCount * 100);
-    const isOk   = opt === q.correct;
-    const fw     = isOk ? '500' : '400';
-    const mark   = isOk ? ' ✓' : '';
+    const count = counts[i];
+    /* CORRECCIÓN: porcentaje sobre TOTAL de respuestas, no sobre el máximo */
+    const pct  = Math.round(count / n * 100);
+    /* ancho de barra = porcentaje real (no relativo al máximo) */
+    const barW = pct;
+    const isOk = opt === q.correct;
+
     html += `
     <div class="stat-row">
       <div class="stat-label">
-        <span style="font-weight:${fw};color:#1a1a2e">${opt}${mark}</span>
-        <span style="color:#4a5568;margin-left:8px">${counts[i]} · ${pct}%</span>
+        <span style="font-weight:${isOk ? '500' : '400'};color:#1a1a2e">
+          ${opt}${isOk ? ' ✓' : ''}
+        </span>
+        <span style="color:#4a5568;white-space:nowrap;margin-left:8px">
+          ${count} resp. · ${pct}%
+        </span>
       </div>
       <div class="bar-bg">
         <div class="bar-fill" style="width:${barW}%;background:${q.colors[i]}">
-          ${barW > 18 ? `<span>${pct}%</span>` : ''}
+          ${barW >= 15 ? `<span>${pct}%</span>` : ''}
         </div>
       </div>
     </div>`;
   });
 
-  if (allResponses.length > 0) {
-    const n = allResponses.length;
-    const correctCount = allResponses.filter(r => r[key] === q.correct).length;
-    const correctPct = Math.round(correctCount / n * 100);
-    html += `<div class="insight"><strong>${correctPct}%</strong> identificó la respuesta clave: <strong>${q.correct}</strong></div>`;
-  } else {
-    html += `<p style="font-size:13px;color:#4a5568;text-align:center;padding:1rem 0">Esperando respuestas de los estudiantes...</p>`;
-  }
+  /* Insight debajo de las barras */
+  const correctCount = allResponses.filter(r => r[key] === q.correct).length;
+  const correctPct   = Math.round(correctCount / n * 100);
+  html += `
+  <div class="insight">
+    <strong>${correctPct}%</strong> de ${n} estudiante${n === 1 ? '' : 's'} identificó la respuesta clave:
+    <strong>${q.correct}</strong>
+  </div>`;
 
   area.innerHTML = html;
 }
 
+/* ── Cambio de pestaña ─────────────────────────────────────── */
 function showTab(i) {
   currentTab = i;
   document.querySelectorAll('.tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
   renderChart();
 }
 
-/* ── Reiniciar datos ──────────────────────────────────────── */
-function showResetConfirm() {
-  document.getElementById('reset-confirm').style.display = 'block';
-}
-function hideResetConfirm() {
-  document.getElementById('reset-confirm').style.display = 'none';
-}
+/* ── Reiniciar ─────────────────────────────────────────────── */
+function showResetConfirm()  { document.getElementById('reset-confirm').style.display = 'block'; }
+function hideResetConfirm()  { document.getElementById('reset-confirm').style.display = 'none'; }
 function resetData() {
   if (!db) return;
   db.ref('respuestas').remove()
@@ -398,9 +391,7 @@ function resetData() {
     .catch(err => alert('Error al reiniciar: ' + err.message));
 }
 
-/* ── Arrancar ─────────────────────────────────────────────── */
 initFirebase();
-renderChart();
 </script>
 </body>
 </html>
