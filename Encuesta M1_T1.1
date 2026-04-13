@@ -1,0 +1,299 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem}
+.q-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
+.q-text{font-size:17px;font-weight:500;color:var(--color-text-primary);line-height:1.4;margin-bottom:1.25rem}
+.opt-btn{width:100%;text-align:left;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;font-size:15px;color:var(--color-text-primary);cursor:pointer;margin-bottom:.5rem;transition:border-color .15s,background .15s}
+.opt-btn:hover{background:var(--color-background-tertiary);border-color:var(--color-border-primary)}
+.opt-btn.selected{background:#E6F1FB;border-color:#378ADD;color:#042C53}
+.opt-btn.selected:hover{background:#B5D4F4}
+.progress{display:flex;gap:6px;margin-bottom:1.5rem}
+.pip{height:4px;flex:1;border-radius:2px;background:var(--color-border-tertiary)}
+.pip.done{background:#378ADD}
+.pip.current{background:#85B7EB}
+.btn-primary{background:#185FA5;color:#fff;border:none;border-radius:var(--border-radius-md);padding:.7rem 1.5rem;font-size:15px;font-weight:500;cursor:pointer;width:100%;margin-top:.75rem}
+.btn-primary:hover{background:#0C447C}
+.btn-primary:disabled{background:var(--color-border-tertiary);cursor:not-allowed}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem 0}
+.qr-box{background:#fff;padding:12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary)}
+.tag{display:inline-block;font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;background:#E6F1FB;color:#185FA5;margin-bottom:.5rem}
+.stat-row{margin-bottom:1rem}
+.stat-label{font-size:13px;color:var(--color-text-secondary);margin-bottom:4px;display:flex;justify-content:space-between}
+.bar-bg{background:var(--color-background-secondary);border-radius:3px;height:22px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px}
+.bar-fill span{font-size:12px;font-weight:500;white-space:nowrap}
+.tabs{display:flex;gap:8px;margin-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:.5rem}
+.tab{font-size:13px;font-weight:500;padding:.35rem .75rem;border-radius:20px;cursor:pointer;color:var(--color-text-secondary);border:none;background:none}
+.tab.active{background:#E6F1FB;color:#185FA5}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;text-align:center}
+.metric .val{font-size:26px;font-weight:500;color:#185FA5}
+.metric .lbl{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1rem 0}
+.insight{background:#E6F1FB;border-radius:var(--border-radius-md);padding:.75rem 1rem;font-size:13px;color:#042C53;margin-top:1rem}
+.insight strong{font-weight:500}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.back-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--color-text-secondary);padding:0}
+.back-btn:hover{color:var(--color-text-primary)}
+.done-icon{width:48px;height:48px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+</style>
+
+<div style="max-width:480px;margin:0 auto;padding:1rem">
+
+<div id="screen-qr" class="screen active">
+  <div class="card">
+    <div class="tag">Ejercicio T1.1</div>
+    <p style="font-size:18px;font-weight:500;margin-bottom:.25rem">Diagnóstico H–E–V–R</p>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem">Escanea el código o accede directamente</p>
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="160" height="160" fill="white"/>
+          <g fill="#003057">
+            <rect x="10" y="10" width="50" height="50" rx="4" fill="none" stroke="#003057" stroke-width="4"/>
+            <rect x="18" y="18" width="34" height="34" rx="2"/>
+            <rect x="100" y="10" width="50" height="50" rx="4" fill="none" stroke="#003057" stroke-width="4"/>
+            <rect x="108" y="18" width="34" height="34" rx="2"/>
+            <rect x="10" y="100" width="50" height="50" rx="4" fill="none" stroke="#003057" stroke-width="4"/>
+            <rect x="18" y="108" width="34" height="34" rx="2"/>
+            <rect x="72" y="10" width="8" height="8"/><rect x="84" y="10" width="8" height="8"/>
+            <rect x="72" y="22" width="8" height="8"/><rect x="84" y="22" width="8" height="8"/>
+            <rect x="72" y="34" width="8" height="8"/>
+            <rect x="72" y="72" width="8" height="8"/><rect x="84" y="72" width="8" height="8"/>
+            <rect x="96" y="72" width="8" height="8"/><rect x="108" y="72" width="8" height="8"/>
+            <rect x="120" y="72" width="8" height="8"/><rect x="132" y="72" width="8" height="8"/>
+            <rect x="72" y="84" width="8" height="8"/><rect x="96" y="84" width="8" height="8"/>
+            <rect x="120" y="84" width="8" height="8"/>
+            <rect x="72" y="96" width="8" height="8"/><rect x="84" y="96" width="8" height="8"/>
+            <rect x="108" y="96" width="8" height="8"/><rect x="132" y="96" width="8" height="8"/>
+            <rect x="72" y="108" width="8" height="8"/><rect x="96" y="108" width="8" height="8"/>
+            <rect x="120" y="108" width="8" height="8"/>
+            <rect x="72" y="120" width="8" height="8"/><rect x="84" y="120" width="8" height="8"/>
+            <rect x="108" y="120" width="8" height="8"/><rect x="132" y="120" width="8" height="8"/>
+            <rect x="72" y="132" width="8" height="8"/><rect x="96" y="132" width="8" height="8"/>
+            <rect x="120" y="132" width="8" height="8"/>
+            <rect x="10" y="72" width="8" height="8"/><rect x="22" y="72" width="8" height="8"/>
+            <rect x="34" y="72" width="8" height="8"/><rect x="46" y="72" width="8" height="8"/>
+            <rect x="58" y="72" width="8" height="8"/>
+            <rect x="10" y="84" width="8" height="8"/><rect x="34" y="84" width="8" height="8"/>
+            <rect x="58" y="84" width="8" height="8"/>
+            <rect x="10" y="96" width="8" height="8"/><rect x="22" y="96" width="8" height="8"/>
+            <rect x="46" y="96" width="8" height="8"/>
+          </g>
+        </svg>
+      </div>
+      <p style="font-size:13px;color:var(--color-text-secondary);text-align:center">código de demostración — reemplazar<br>con URL real al publicar</p>
+    </div>
+    <button class="btn-primary" onclick="go('screen-q1')">Iniciar encuesta →</button>
+    <button class="btn-primary" style="margin-top:.5rem;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary)" onclick="go('screen-results')">Ver resultados (docente)</button>
+  </div>
+</div>
+
+<div id="screen-q1" class="screen">
+  <div class="card">
+    <div class="nav">
+      <button class="back-btn" onclick="go('screen-qr')">← Volver</button>
+      <span style="font-size:12px;color:var(--color-text-secondary)">1 de 3</span>
+    </div>
+    <div class="progress">
+      <div class="pip current"></div><div class="pip"></div><div class="pip"></div>
+    </div>
+    <div class="q-label">Pregunta 1 · Marco H–E–V–R</div>
+    <div class="q-text">¿Cuál componente del riesgo domina en la vía andina de 40 km bajo precipitaciones más intensas hacia 2050?</div>
+    <button class="opt-btn" onclick="select(this,'q1','H — Hazard')">H — Hazard<br><span style="font-size:13px;color:var(--color-text-secondary)">La precipitación intensa proyectada bajo SSP3-7.0</span></button>
+    <button class="opt-btn" onclick="select(this,'q1','E — Exposure')">E — Exposure<br><span style="font-size:13px;color:var(--color-text-secondary)">Ubicación del trazado en zona susceptible</span></button>
+    <button class="opt-btn" onclick="select(this,'q1','V — Vulnerability')">V — Vulnerability<br><span style="font-size:13px;color:var(--color-text-secondary)">Drenaje diseñado con datos de los años 80</span></button>
+    <button class="opt-btn" onclick="select(this,'q1','Todos por igual')">Todos por igual<br><span style="font-size:13px;color:var(--color-text-secondary)">Los tres componentes tienen el mismo peso</span></button>
+    <button class="btn-primary" id="btn-q1" disabled onclick="go('screen-q2')">Siguiente →</button>
+  </div>
+</div>
+
+<div id="screen-q2" class="screen">
+  <div class="card">
+    <div class="nav">
+      <button class="back-btn" onclick="go('screen-q1')">← Anterior</button>
+      <span style="font-size:12px;color:var(--color-text-secondary)">2 de 3</span>
+    </div>
+    <div class="progress">
+      <div class="pip done"></div><div class="pip current"></div><div class="pip"></div>
+    </div>
+    <div class="q-label">Pregunta 2 · Acción del ingeniero</div>
+    <div class="q-text">¿Sobre cuál componente puede actuar el ingeniero con mayor efectividad en esta vía existente?</div>
+    <button class="opt-btn" onclick="select(this,'q2','H — Hazard')">H — Hazard<br><span style="font-size:13px;color:var(--color-text-secondary)">Modificar la intensidad de la precipitación</span></button>
+    <button class="opt-btn" onclick="select(this,'q2','E — Exposure')">E — Exposure<br><span style="font-size:13px;color:var(--color-text-secondary)">Reubicar el trazado de la vía</span></button>
+    <button class="opt-btn" onclick="select(this,'q2','V — Vulnerability')">V — Vulnerability<br><span style="font-size:13px;color:var(--color-text-secondary)">Redimensionar obras de drenaje y taludes</span></button>
+    <button class="opt-btn" onclick="select(this,'q2','R — Risk directamente')">R — Risk directamente<br><span style="font-size:13px;color:var(--color-text-secondary)">Actuar sobre el riesgo sin análisis previo</span></button>
+    <button class="btn-primary" id="btn-q2" disabled onclick="go('screen-q3')">Siguiente →</button>
+  </div>
+</div>
+
+<div id="screen-q3" class="screen">
+  <div class="card">
+    <div class="nav">
+      <button class="back-btn" onclick="go('screen-q2')">← Anterior</button>
+      <span style="font-size:12px;color:var(--color-text-secondary)">3 de 3</span>
+    </div>
+    <div class="progress">
+      <div class="pip done"></div><div class="pip done"></div><div class="pip current"></div>
+    </div>
+    <div class="q-label">Pregunta 3 · Acción prioritaria</div>
+    <div class="q-text">Si solo puedes implementar UNA medida hoy para esta vía, ¿cuál sería?</div>
+    <button class="opt-btn" onclick="select(this,'q3','Redimensionar alcantarillas')">Redimensionar alcantarillas y cunetas<br><span style="font-size:13px;color:var(--color-text-secondary)">Actualizar criterios de diseño de drenaje (Guía DNP 2025)</span></button>
+    <button class="opt-btn" onclick="select(this,'q3','Sistema de alerta temprana')">Implementar sistema de alerta temprana<br><span style="font-size:13px;color:var(--color-text-secondary)">Monitoreo de lluvias y niveles de quebradas</span></button>
+    <button class="opt-btn" onclick="select(this,'q3','Restricción de uso del suelo')">Restricción de uso del suelo adyacente<br><span style="font-size:13px;color:var(--color-text-secondary)">Ordenamiento territorial en laderas</span></button>
+    <button class="opt-btn" onclick="select(this,'q3','Estudio SSP3-7.0 primero')">Contratar estudio SSP3-7.0 primero<br><span style="font-size:13px;color:var(--color-text-secondary)">Caracterizar el hazard antes de actuar</span></button>
+    <button class="btn-primary" id="btn-q3" disabled onclick="submit()">Enviar respuestas ✓</button>
+  </div>
+</div>
+
+<div id="screen-done" class="screen">
+  <div class="card" style="text-align:center;padding:2rem 1.25rem">
+    <div class="done-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p style="font-size:18px;font-weight:500;margin-bottom:.5rem">¡Respuestas enviadas!</p>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Tu respuesta ha sido registrada.<br>El docente compartirá los resultados en breve.</p>
+    <div class="insight">
+      <strong>Recuerda:</strong> La clave está en la Vulnerabilidad — es el componente sobre el que el ingeniero tiene mayor margen de acción directa en infraestructura existente.
+    </div>
+  </div>
+</div>
+
+<div id="screen-results" class="screen">
+  <div class="card">
+    <div class="nav">
+      <button class="back-btn" onclick="go('screen-qr')">← Volver</button>
+      <span style="font-size:12px;color:var(--color-text-secondary)" id="resp-count">0 respuestas</span>
+    </div>
+    <p style="font-size:17px;font-weight:500;margin-bottom:1rem">Resultados en tiempo real</p>
+
+    <div class="summary-grid">
+      <div class="metric"><div class="val" id="m-total">0</div><div class="lbl">respuestas</div></div>
+      <div class="metric"><div class="val" id="m-correct">—</div><div class="lbl">respuesta clave Q1</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab(0)">Q1</button>
+      <button class="tab" onclick="showTab(1)">Q2</button>
+      <button class="tab" onclick="showTab(2)">Q3</button>
+    </div>
+
+    <div id="chart-area"></div>
+
+    <div class="divider"></div>
+    <button class="btn-primary" style="background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary)" onclick="addDemo()">+ Simular 5 respuestas</button>
+    <button class="btn-primary" style="margin-top:.5rem" onclick="resetData()">Reiniciar encuesta</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const QUESTIONS=[
+  {label:"¿Cuál componente domina el riesgo?",opts:["H — Hazard","E — Exposure","V — Vulnerability","Todos por igual"],correct:"V — Vulnerability",colors:["#E24B4A","#378ADD","#1D9E75","#888780"]},
+  {label:"¿Sobre cuál puede actuar el ingeniero?",opts:["H — Hazard","E — Exposure","V — Vulnerability","R — Risk directamente"],correct:"V — Vulnerability",colors:["#E24B4A","#378ADD","#1D9E75","#888780"]},
+  {label:"Una medida prioritaria hoy",opts:["Redimensionar alcantarillas","Sistema de alerta temprana","Restricción de uso del suelo","Estudio SSP3-7.0 primero"],correct:"Redimensionar alcantarillas",colors:["#1D9E75","#378ADD","#85B7EB","#888780"]}
+];
+
+let answers={q1:null,q2:null,q3:null};
+let responses=[];
+let currentTab=0;
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='screen-results') renderChart();
+}
+
+function select(btn,q,val){
+  const parent=btn.closest('.card');
+  parent.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[q]=val;
+  const nxt=document.getElementById('btn-'+q);
+  if(nxt) nxt.disabled=false;
+}
+
+function submit(){
+  responses.push({...answers});
+  updateMetrics();
+  go('screen-done');
+}
+
+function updateMetrics(){
+  const n=responses.length;
+  document.getElementById('m-total').textContent=n;
+  document.getElementById('resp-count').textContent=n+' respuesta'+(n===1?'':'s');
+  const vCount=responses.filter(r=>r.q1==='V — Vulnerability').length;
+  document.getElementById('m-correct').textContent=n>0?Math.round(vCount/n*100)+'%':'—';
+}
+
+function getCounts(qi){
+  const key='q'+(qi+1);
+  const opts=QUESTIONS[qi].opts;
+  return opts.map(o=>responses.filter(r=>r[key]===o).length);
+}
+
+function showTab(i){
+  currentTab=i;
+  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  renderChart();
+}
+
+function renderChart(){
+  const area=document.getElementById('chart-area');
+  const q=QUESTIONS[currentTab];
+  const counts=getCounts(currentTab);
+  const total=responses.length||1;
+  const maxCount=Math.max(...counts,1);
+
+  let html=`<div class="q-label" style="margin-bottom:.75rem">${q.label}</div>`;
+  q.opts.forEach((opt,i)=>{
+    const pct=Math.round(counts[i]/total*100);
+    const barW=Math.round(counts[i]/maxCount*100);
+    const isCorrect=opt===q.correct;
+    html+=`<div class="stat-row">
+      <div class="stat-label">
+        <span style="font-size:13px;color:var(--color-text-primary);font-weight:${isCorrect?'500':'400'}">${opt}${isCorrect?' ✓':''}</span>
+        <span style="font-size:13px;color:var(--color-text-secondary)">${counts[i]} (${pct}%)</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill" style="width:${barW}%;background:${q.colors[i]}">
+          ${barW>15?`<span style="color:#fff;font-size:11px">${pct}%</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  if(responses.length>0){
+    const vPct=Math.round(responses.filter(r=>r['q'+(currentTab+1)]===q.correct).length/responses.length*100);
+    html+=`<div class="insight" style="margin-top:1rem"><strong>${vPct}%</strong> de estudiantes identificó la respuesta clave: <strong>${q.correct}</strong></div>`;
+  }
+  area.innerHTML=html;
+}
+
+function addDemo(){
+  const demoSets=[
+    {q1:'V — Vulnerability',q2:'V — Vulnerability',q3:'Redimensionar alcantarillas'},
+    {q1:'H — Hazard',q2:'V — Vulnerability',q3:'Sistema de alerta temprana'},
+    {q1:'V — Vulnerability',q2:'E — Exposure',q3:'Redimensionar alcantarillas'},
+    {q1:'Todos por igual',q2:'V — Vulnerability',q3:'Estudio SSP3-7.0 primero'},
+    {q1:'V — Vulnerability',q2:'V — Vulnerability',q3:'Redimensionar alcantarillas'},
+  ];
+  demoSets.forEach(d=>responses.push(d));
+  updateMetrics();
+  renderChart();
+}
+
+function resetData(){
+  responses=[];
+  answers={q1:null,q2:null,q3:null};
+  updateMetrics();
+  renderChart();
+}
+
+renderChart();
+</script>
